@@ -1,15 +1,47 @@
 import mongoose from 'mongoose';
+import grpc from '@grpc/grpc-js';
+import protoLoader from '@grpc/proto-loader';
+import { getAllProduct, getProduct, addProduct } from './service/index.js';
 import config from './config/index.js';
 
-import app from './app.js';
+const options = {
+  keepCase: true,
+  longs: String,
+  enums: String,
+  defaults: true,
+  oneofs: true,
+};
 
-try {
-  await mongoose
-    .connect(config.db.uri)
-    .then(() => console.log('Connected to DB'));
-  app.listen(8000, () => {
-    console.log('Server running on port 8000');
-  });
-} catch (err) {
-  console.log(err);
-}
+const PROTO_PATH = './product.proto';
+
+const packageDef = protoLoader.loadSync(PROTO_PATH, options);
+const productPackage = grpc.loadPackageDefinition(packageDef);
+
+const server = new grpc.Server();
+server.addService(productPackage.ProductService.service, {
+  getProduct,
+  addProduct,
+  getAllProduct,
+});
+
+mongoose.connect(config.db.uri, {
+  useNewUrlParser: true,
+});
+
+mongoose.connection.on('open', () => {
+  console.log('Connected to DB');
+});
+
+mongoose.connection.on('error', (err) => {
+  console.log(`Mongo connection error: ${err.message}`);
+});
+
+server.bindAsync(
+  '127.0.0.1:7001',
+  grpc.ServerCredentials.createInsecure(),
+  (error, port) => {
+    if (error) console.log('Error: ', error);
+    console.log(`Server running at http://127.0.0.1:${port}`);
+    server.start();
+  },
+);

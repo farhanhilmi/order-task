@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+service ProductService {
+  rpc getProduct (productId) returns (Product) {}
+  rpc getAllProduct (Empty) returns (ListProduct) {}
+  rpc addProduct (AddProduct) returns (Product) {}
+}
+
+message Empty {}
+
+message AddProduct {
+  string name = 1;
+  string description = 2;
+  int32 quantity = 3;
+}
+
+message Product {
+  string name = 1;
+  string description = 2;
+  int32 quantity = 3;
+  string _id = 4;
+}
+
+message productId {
+  string _id = 1;
+}
+
+message ListProduct {
+  repeated Product products = 1;
+}
