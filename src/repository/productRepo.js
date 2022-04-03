@@ -34,4 +34,15 @@ const addProduct = (data) => {
   });
 };
 
-export default { getProductById, getListProduct, addProduct };
+const checkQty = (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const productQty = await Product.findOne({ _id: id }, 'quantity');
+      resolve(productQty);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+export default { getProductById, getListProduct, addProduct, checkQty };

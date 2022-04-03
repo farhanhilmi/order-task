@@ -1,7 +1,12 @@
 import mongoose from 'mongoose';
 import grpc from '@grpc/grpc-js';
 import protoLoader from '@grpc/proto-loader';
-import { getAllProduct, getProduct, addProduct } from './service/index.js';
+import {
+  getAllProduct,
+  getProduct,
+  addProduct,
+  checkProductQty,
+} from './service/index.js';
 import config from './config/index.js';
 
 const options = {
@@ -22,6 +27,7 @@ server.addService(productPackage.ProductService.service, {
   getProduct,
   addProduct,
   getAllProduct,
+  checkProductQty,
 });
 
 mongoose.connect(config.db.uri, {

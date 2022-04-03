@@ -4,9 +4,15 @@ service ProductService {
   rpc getProduct (productId) returns (Product) {}
   rpc getAllProduct (Empty) returns (ListProduct) {}
   rpc addProduct (AddProduct) returns (Product) {}
+  rpc checkProductQty (productId) returns (productQty) {}
 }
 
 message Empty {}
+
+message productQty {
+  string _id = 1;
+  int32 quantity = 2;
+}
 
 message AddProduct {
   string name = 1;
