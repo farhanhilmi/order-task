@@ -18,6 +18,7 @@ message AddProduct {
   string name = 1;
   string description = 2;
   int32 quantity = 3;
+  int32 price = 4;
 }
 
 message Product {
@@ -25,6 +26,7 @@ message Product {
   string description = 2;
   int32 quantity = 3;
   string _id = 4;
+  int32 price = 5;
 }
 
 message productId {
