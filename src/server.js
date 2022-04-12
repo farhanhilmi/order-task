@@ -6,6 +6,7 @@ import {
   getProduct,
   addProduct,
   checkProductQty,
+  isProductsAvailable,
 } from './service/index.js';
 import config from './config/index.js';
 
@@ -28,6 +29,7 @@ server.addService(productPackage.ProductService.service, {
   addProduct,
   getAllProduct,
   checkProductQty,
+  isProductsAvailable,
 });
 
 mongoose.connect(config.db.uri, {
