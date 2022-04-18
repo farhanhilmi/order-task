@@ -1,5 +1,4 @@
 import Product from '../models/product.js';
-import mongo from '../utils/mongo.js';
 
 const getProductById = async (id) => {
   return new Promise(async (resolve, reject) => {
@@ -38,7 +37,11 @@ const addProduct = (data) => {
 const checkQty = (id) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const productQty = await Product.findOne({ _id: id }, 'quantity');
+      const productQty = await Product.findOne({ _id: id }, [
+        'quantity',
+        'price',
+      ]);
+      console.log('productQty', productQty);
       resolve(productQty);
     } catch (error) {
       reject(error);
@@ -46,7 +49,33 @@ const checkQty = (id) => {
   });
 };
 
-const checkIsProductsAvailable = (product) => {
+const updateProductQty = (id, orderedQty, { session }) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const productQty = await Product.findOneAndUpdate(
+        {
+          _id: id,
+        },
+        [
+          {
+            $set: {
+              quantity: {
+                $subtract: ['$quantity', orderedQty],
+              },
+            },
+          },
+        ],
+        // { new: true, select: { price: 1, quantity: 1, _id: 1 }, session },
+        { session },
+      );
+      resolve(productQty);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+const checkProductsAvailable = (productIds) => {
   return new Promise(async (resolve, reject) => {
     try {
       // console.log('products', products);
@@ -67,24 +96,65 @@ const checkIsProductsAvailable = (product) => {
       //   return { _id: prod._id };
       // });
 
+      // const productAvailable = await Product.aggregate([
+      //   {
+      //     $match: { _id: mongo.toObjectId(product._id) },
+      //   },
+      //   {
+      //     $project: {
+      //       price: 1,
+      //       quantity: 1,
+      //       isAvailable: {
+      //         $cond: {
+      //           if: { $gte: ['$quantity', product.quantity] },
+      //           then: true,
+      //           else: false,
+      //         },
+      //       },
+      //     },
+      //   },
+      // ]);
+
       const productAvailable = await Product.aggregate([
         {
-          $match: { _id: mongo.toObjectId(product._id) },
+          $match: {
+            _id: {
+              $in: productIds,
+            },
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            docs: {
+              $push: {
+                _id: '$$ROOT._id',
+                price: '$$ROOT.price',
+                quantity: '$$ROOT.quantity',
+              },
+            },
+          },
+        },
+        {
+          $addFields: {
+            productIds: '$docs._id',
+          },
         },
         {
           $project: {
-            isAvailable: {
+            result: {
               $cond: {
-                if: { $gte: ['$quantity', product.quantity] },
-                then: true,
-                else: false,
+                if: {
+                  $eq: [productIds, '$productIds'],
+                },
+                then: '$docs',
+                else: null,
               },
             },
           },
         },
       ]);
-
-      resolve(productAvailable);
+      resolve(productAvailable[0]);
     } catch (error) {
       reject(error);
     }
@@ -96,5 +166,6 @@ export default {
   getListProduct,
   addProduct,
   checkQty,
-  checkIsProductsAvailable,
+  checkProductsAvailable,
+  updateProductQty,
 };
