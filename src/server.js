@@ -5,7 +5,6 @@ import {
   getAllProduct,
   getProduct,
   addProduct,
-  checkProductQty,
   isProductsAvailable,
   checkAndUpdateProductQty,
 } from './service/index.js';
@@ -29,7 +28,6 @@ server.addService(productPackage.ProductService.service, {
   getProduct,
   addProduct,
   getAllProduct,
-  checkProductQty,
   isProductsAvailable,
   checkAndUpdateProductQty,
 });

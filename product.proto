@@ -4,8 +4,7 @@ service ProductService {
   rpc getProduct (productId) returns (Product) {}
   rpc getAllProduct (Empty) returns (ListProduct) {}
   rpc addProduct (AddProduct) returns (Product) {}
-  rpc checkProductQty (productsId) returns (productQty) {}
-  rpc isProductsAvailable (listProductQty) returns (status) {}
+  rpc isProductsAvailable (productsId) returns (status) {}
   rpc checkAndUpdateProductQty (listCheckAndUpdateQty) returns (listProductQty) {}
 }
 
@@ -46,7 +45,7 @@ message productId {
 }
 
 message productsId {
-  repeated productId productsId = 1;
+  repeated string productsId = 1;
 }
 
 message listProductQty {
