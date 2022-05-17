@@ -10,6 +10,8 @@ import {
 } from './service/index.js';
 // import config from './config/index.js';
 
+import config from './config/index.js';
+
 const options = {
   keepCase: true,
   longs: String,
@@ -33,13 +35,13 @@ server.addService(productPackage.ProductService.service, {
 });
 
 server.bindAsync(
-  '127.0.0.1:7001',
+  config.app.port,
   grpc.ServerCredentials.createInsecure(),
   (error, port) => {
     if (error) console.log('Error: ', error);
     mongoDBConnection.connect();
 
-    console.log(`Server running at http://127.0.0.1:${port}`);
+    console.log(`Server running at ${config.app.port}`);
     server.start();
   },
 );

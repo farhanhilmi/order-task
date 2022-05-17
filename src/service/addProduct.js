@@ -7,7 +7,6 @@ const addProduct = async (call, callback) => {
     if (!product) callback(null, {});
     callback(null, product);
   } catch (err) {
-    console.log('DADAD: ', err);
     callback(err);
   }
 };
