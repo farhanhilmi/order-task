@@ -64,7 +64,9 @@ const checkAndUpdateProductQty = async (call, callback) => {
     const { products } = call.request;
 
     const listProductQty = await checkAndUpdateProductQuantity(products);
-
+    if (listProductQty instanceof Error) {
+      throw new Error(listProductQty.message);
+    }
     callback(null, { listProductQty });
   } catch (err) {
     callback(err);
