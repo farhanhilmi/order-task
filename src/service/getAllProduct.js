@@ -1,12 +1,11 @@
 import productRepo from '../repository/productRepo.js';
 
-const getProducts = async (call, callback) => {
+const getProducts = async () => {
   try {
-    const products = await productRepo.getListProduct();
-    if (!products) callback(null, { products: [] });
-    callback(null, { products });
+    return await productRepo.getListProduct();
   } catch (err) {
-    callback(err);
+    console.log(err);
+    return err;
   }
 };
 

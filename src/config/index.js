@@ -6,7 +6,7 @@ const { HOST, SERVER_PORT, MONGODB_URI } = process.env;
 
 const config = {
   app: {
-    port: `${HOST}:${SERVER_PORT}` | 8000,
+    port: `${HOST}:${SERVER_PORT}`,
   },
   db: {
     uri: MONGODB_URI,

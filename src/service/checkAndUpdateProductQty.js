@@ -2,12 +2,11 @@ import productRepo from '../repository/productRepo.js';
 import Product from '../models/product.js';
 import mongo from '../utils/mongo.js';
 
-export default async (call, callback) => {
+export default async (products) => {
   const session = await Product.startSession();
   try {
     session.startTransaction();
 
-    const { products } = call.request;
     const productIds = await products.map((prod) => mongo.toObjectId(prod._id));
     const { result: productAvailable } =
       await productRepo.checkProductsAvailable(productIds);
@@ -31,11 +30,11 @@ export default async (call, callback) => {
 
     await session.commitTransaction();
     session.endSession();
-    callback(null, { listProductQty: productAvailable });
+    return productAvailable;
   } catch (err) {
     if (session.inTransaction) {
       session.abortTransaction();
     }
-    callback(err);
+    return err;
   }
 };

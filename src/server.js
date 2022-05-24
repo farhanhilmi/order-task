@@ -1,14 +1,7 @@
 import grpc from '@grpc/grpc-js';
 import protoLoader from '@grpc/proto-loader';
 import mongoDBConnection from './database/mongodb.js';
-import {
-  getAllProduct,
-  getProduct,
-  addProduct,
-  isProductsAvailable,
-  checkAndUpdateProductQty,
-} from './service/index.js';
-// import config from './config/index.js';
+import productHandler from './handler/productHandler.js';
 
 import config from './config/index.js';
 
@@ -27,11 +20,11 @@ const productPackage = grpc.loadPackageDefinition(packageDef);
 
 const server = new grpc.Server();
 server.addService(productPackage.ProductService.service, {
-  getProduct,
-  addProduct,
-  getAllProduct,
-  isProductsAvailable,
-  checkAndUpdateProductQty,
+  getProduct: productHandler.getProductById,
+  addProduct: productHandler.addProduct,
+  getAllProduct: productHandler.getProducts,
+  isProductsAvailable: productHandler.isProductsAvailable,
+  checkAndUpdateProductQty: productHandler.checkAndUpdateProductQty,
 });
 
 server.bindAsync(

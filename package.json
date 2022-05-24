@@ -4,9 +4,14 @@
   "description": "",
   "main": "src/server.js",
   "type": "module",
+  "jest": {
+    "transform": {
+      "^.+\\.[t|j]sx?$": "babel-jest"
+    }
+  },
   "scripts": {
     "start": "nodemon src/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
@@ -22,6 +27,8 @@
     "mongoose": "^6.2.9"
   },
   "devDependencies": {
+    "babel-jest": "^28.1.0",
+    "jest": "^28.1.0",
     "nodemon": "^2.0.15"
   }
 }
