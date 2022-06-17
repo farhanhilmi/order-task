@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Product Service | Add New Product should store a new product with correct property 1`] = `
+Object {
+  "__v": 0,
+  "_id": "62903f14e8db779d6abe5607",
+  "createdDate": 2022-05-27T03:01:40.383Z,
+  "description": "ladkald",
+  "modifyDate": 2022-05-27T03:01:40.383Z,
+  "name": "apple",
+  "price": 10000,
+  "quantity": 50,
+}
+`;
